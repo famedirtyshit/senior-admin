@@ -8,12 +8,27 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "12.0.2",
+    "@emotion/react": "^11.4.1",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.60",
+    "@material-ui/pickers": "^3.3.10",
+    "axios": "^0.21.1",
+    "classnames": "^2.3.1",
+    "next": "11.0.1",
+    "next-compose-plugins": "^2.2.1",
+    "next-images": "^1.8.1",
+    "password-validator": "^5.1.1",
+    "postcss-flexbugs-fixes": "^5.0.2",
+    "postcss-preset-env": "^6.7.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-draggable": "^4.4.4",
+    "react-material-ui-carousel": "^2.3.1",
+    "tailwindcss": "^2.2.7"
   },
   "devDependencies": {
-    "eslint": "7.32.0",
-    "eslint-config-next": "12.0.2"
+    "eslint": "7.31.0",
+    "eslint-config-next": "11.0.1"
   }
 }
