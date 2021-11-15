@@ -26,6 +26,14 @@ import {
   createTheme,
   ThemeProvider,
 } from "@material-ui/core/styles";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import adminUtil from "@utils/adminUtil";
+import initFirebase from "@utils/initFirebase";
 
 const theme = createTheme({
   palette: {
@@ -78,162 +86,8 @@ export default function Admin() {
   const [openMoreInfoModal, setOpenMoreInfoModal] = useState(false);
   const [selectReportPost, setSelectReportPost] = useState(-1);
   const [selectMoreInfoPost, setSelectMoreInfoPost] = useState(-1);
-  const [reportPost, setReportPost] = useState([
-    {
-      image: IMAGES.catMockup1,
-      date: "02/02/22",
-      sex: "male",
-      Collar: false,
-      description: "หมาพันธ์นี้ไม่สุภาพเลย สีไม่สวย",
-      postOn: "1 Oct 2021",
-      deleteOn: "2 Oct 2021",
-      note: "เนื้อหาไม่สุภาพ",
-      reason: {
-        เนื้อหาไม่สุภาพ: 1,
-        a: 2,
-        b: 3,
-        c: 2,
-        d: 3,
-        cv: 2,
-        sd: 7,
-        ss: 7,
-        sq: 7,
-        sj: 7,
-        sg: 7,
-        s1: 7,
-        s2: 7,
-        s3: 7,
-        s4: 7,
-        s5: 7,
-        s6: 7,
-        s7: 7,
-        s8: 7,
-        s9: 7,
-        s0: 7,
-        s12: 7,
-        s122: 7,
-        ssg: 7,
-        sssg: 7,
-        sss1g: 7,
-        sss2g: 7,
-        sss3g: 7,
-        sss4g: 7,
-        sss5g: 7,
-        sss6g: 7,
-        sss7g: 7,
-        sss8g: 7,
-        sss9g: 7,
-        sss0g: 7,
-        sssjg: 7,
-        sss22g: 7,
-        sss23g: 7,
-        sss424g: 7,
-        sss23g: 7,
-        sss12g: 7,
-        ssssg: 7,
-        ssfsg: 7,
-        ssgsg: 7,
-        sshsg: 7,
-        ssjsg: 7,
-        ssjsg: 7,
-        jsssg: 7,
-        sjssg: 7,
-        ssjsg: 7,
-        sssgg: 7,
-        sssgj: 7,
-        ss4sg: 7,
-        sss4g: 7,
-        s4ssg: 7,
-        sss3g: 7,
-        sss5g: 7,
-        s6ssg: 7,
-        sss7g: 7,
-        s8ssg: 7,
-      },
-    },
-    {
-      image: IMAGES.catMockup2,
-      date: "02/02/22",
-      sex: "",
-      collar: true,
-      description: "หมาตัวนี้น่ากิน ถ้าเอาไปผัดกับเหล้าขาวจะอร่อยมาก",
-      postOn: "4 Oct 2021",
-      deleteOn: "5 Oct 2021",
-      note: "เนื้อหาไม่สุภาพเลย มีแต่ภาพอนาจาร โพสลงมาได้อย่างไร ถ้าหากแอดมินมาเห็นฝากลบโพสนี้ด้วยครับ ถ้าหากเด็ก ๆ มาดูจะเป็นตัวอย่างที่ไม่ดี",
-      reason: {
-        เนื้อหาไม่สุภาพ: 1,
-      },
-    },
-    {
-      image: IMAGES.catMockup1,
-      date: "",
-      sex: "male",
-      collar: true,
-      description: "สุภาพมาก ",
-      postOn: "6 Oct 2021",
-      deleteOn: "7 Oct 2021",
-      note: "ขอให้เธอและฉันได้เคียงคู่กันขอให้เราได้รักกันชัวนิรันดร์แค่ฉันและเธอค่ำคืนเหน็บหนาวในทุกๆวันขอมีเธอกอดฉันในยามค่ำคืนได้โปรดเถอะฟ้าช่วยรับคำอธิษฐานของเรา",
-      reason: {
-        เนื้อหาไม่สุภาพ: 6,
-      },
-    },
-    {
-      image: IMAGES.catMockup2,
-      date: "02/02/22",
-      sex: "male",
-      collar: false,
-      description: "",
-      postOn: "7 Oct 2021",
-      deleteOn: "-",
-      note: "ฉันจะกอดเธอไว้ ขอโทษที่ฉันเคยกอดเเน่นไป ฉันขอโทษเธอ หากว่าฉันได้กอดเธออีกครั้ง ฉันจะทำให้ดีที่สุด ไม่ให้เธอไป กลับมาให้ฉันได้กอดเธอไว้ คำว่าลาที่ฟังครั้งนั้น มันทำให้ฉันอยากหยุดเคลื่อนไหว ถ้าเข้าไปกอดต้องนานเท่าไหร่ เธอจะคืนกลับมา หากยังไม่สายให้เธอได้รู้ ว่าฉันนั้นรักเธอมากเเค่ไหน เเละฉันจะทำ ทุกวินาที ให้เราได้อยู่ด้วยกันตลอดไป",
-      reason: {
-        b: 3,
-      },
-    },
-    {
-      image: IMAGES.catMockup1,
-      date: "02/02/22",
-      sex: "male",
-      collar: false,
-      description: "หมาพันธ์นี้ไม่สุภาพเลย สีไม่สวยด้วยอิอิ",
-      postOn: "7 Oct 2021",
-      deleteOn: "-",
-      note: "เนื้อหาไม่สุภาพ",
-      reason: {
-        เนื้อหาไม่สุภาพ: 1,
-        a: 2,
-        b: 3,
-      },
-    },
-    {
-      image: IMAGES.catMockup2,
-      date: "02/02/22",
-      sex: "male",
-      collar: false,
-      description: "หมาพันธ์นี้ไม่สุภาพเลย สีไม่สวยด้วยอิอิ",
-      postOn: "1 Oct 2021",
-      deleteOn: "2 Oct 2021",
-      note: "เนื้อหาไม่สุภาพ",
-      reason: {
-        เนื้อหาไม่สุภาพ: 1,
-        a: 2,
-        b: 3,
-      },
-    },
-    {
-      image: IMAGES.catMockup2,
-      date: "02/02/22",
-      sex: "",
-      collar: false,
-      description: "หมาพันธ์นี้ไม่สุภาพเลย สีไม่สวยด้วยอิอิ",
-      postOn: "1 Oct 2021",
-      deleteOn: "2 Oct 2021",
-      note: "เนื้อหาไม่สุภาพ",
-      reason: {
-        เนื้อหาไม่สุภาพ: 1,
-      },
-    },
-  ]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [reportPost, setReportPost] = useState([]);
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -246,10 +100,12 @@ export default function Admin() {
   const renderPageItems = () => {
     let store = [];
     let initIndex = (page - 1) * 5;
-    if (reportPost.length < 1) {
-      console.log("not found");
-      return;
-    }
+
+    if (currentReportPost == 1)
+      if (reportPost.length < 1) {
+        console.log("not found");
+        return;
+      }
     for (let i = initIndex; i < initIndex + 5 && i < reportPost.length; i++) {
       store.push(reportPost[i]);
     }
@@ -261,7 +117,6 @@ export default function Admin() {
 
   useEffect(() => {
     renderPageItems();
-
   }, [reportPost, page]);
 
   //   useEffect(async () => {
@@ -274,8 +129,44 @@ export default function Admin() {
   // }, [reportPost, page]);
 
   useEffect(() => {
+    let res = initFirebase();
+    if (res != false) {
+      console.log("init firebase");
+      const auth = getAuth();
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          setCurrentUser(user);
+          console.log(user);
+          let reportPostObj = await adminUtil.getReportPost(user.uid);
+          if (reportPostObj.data.result == true) {
+            setReportPost(reportPostObj.data.searchResult);
+            // console.log(reportPostObj.data.searchResult);
+          } else {
+            console.log("error handle");
+          }
+        } else {
+          prop.setIsLogin(false);
+        }
+      });
+    } else {
+    }
+  }, []);
+
+  useEffect(() => {
     setMaxPage(Math.ceil(reportPost.length / 5));
-  }, [reportPost]);
+  }, [currentReportPost]);
+
+  useEffect(() => {
+    if (page > maxPage) {
+      console.log(currentReportPost);
+
+      if (maxPage < 1) {
+        setPage(1);
+      } else {
+        setPage(maxPage);
+      }
+    }
+  }, [maxPage]);
 
   useEffect(() => {
     console.log(openSeeMoreModal);
@@ -365,17 +256,13 @@ export default function Admin() {
     </Modal>
   );
 
-const sumValue = () => {
-  Object.entries(currentReportPost.reason).map(
-    ([key, value]) => {
-      return (
-        <p key={key}>
-          {key} {value}
-        </p>
-      );
-    }
-  )
-}
+  const sumValue = (reason) => {
+    let reportCount = 0;
+    Object.entries(reason).map(([key, value]) => {
+      reportCount = reportCount + value;
+    });
+    return <p>{reportCount}</p>;
+  };
 
   return (
     <div
@@ -459,82 +346,98 @@ const sumValue = () => {
                     className="block-inner-body 2xl:w-4/5 mx-auto bg-gray-100  shadow-lg 2xl:grid 2xl:grid-rows-5 2xl:gap-0.5"
                     style={{ height: "540px" }}
                   >
-                    {currentReportPost.map((item, i) => (
-                      <div
-                        key={i}
-                        className="item-style bg-white 2xl:grid 2xl:grid-cols-7 2xl:justify-items-stretch 2xl:gap-2 "
-                      >
-                        <div className="grid grid-flow-col grid-cols-3 col-span-3 ">
+                    {currentReportPost != null
+                      ? currentReportPost.map((item, i) => (
                           <div
-                            className="justify-self-center cursor-pointer "
-                            onClick={() => setSelectMoreInfoPost(i)}
+                            key={i}
+                            className="item-style bg-white 2xl:grid 2xl:grid-cols-7 2xl:justify-items-stretch 2xl:gap-2 "
                           >
-                            <Image
-                              src={item.image}
-                              alt="catmockup"
-                              width="110"
-                              height="107"
-                              key={i}
-                            ></Image>
-                          </div>
-                          <div className="content-center   mx-3 grid col-span-3 text-sm ">
-                            {/* {item.description.length < "93" ? item.description:"null"} */}
-                            <div className="text-sm">
-                              <p>Date: {item.date != "" ? item.date : "-"}</p>
-                              <p>Sex: {item.sex != "" ? item.sex : "-"}</p>
-                              <p>Colar: {item.collar ? "Have" : "Not Have"}</p>
-                              {/* <p>Description: {item.description != "" ? item.description.length : "-"}</p> */}
-                              <p>
-                                Description:{" "}
-                                {item.description != ""
-                                  ? item.description.length >= 32
-                                    ? item.description.substring(0, 30) +
-                                      "......"
-                                    : item.description
-                                  : "-"}
-                              </p>
+                            <div className="grid grid-flow-col grid-cols-3 col-span-3 ">
+                              <div
+                                className="justify-self-center cursor-pointer "
+                                onClick={() => setSelectMoreInfoPost(i)}
+                              >
+                                {item.postId.urls.length > 0 ? (
+                                  <Image
+                                    src={item.postId.urls[0].url}
+                                    alt={item.postId.urls[0].fileName}
+                                    width="110"
+                                    height="107"
+                                  />
+                                ) : (
+                                  <Image
+                                    src={IMAGES.defaultCat}
+                                    alt="defaultImageCat"
+                                    width="110"
+                                    height="107"
+                                  />
+                                )}
+                              </div>
+                              <div className="content-center   mx-3 grid col-span-3 text-sm ">
+                                {/* {item.description.length < "93" ? item.description:"null"} */}
+                                <div className="text-sm">
+                                  <p>
+                                    Date:{" "}
+                                    {item.postId.date != ""
+                                      ? item.postId.date
+                                      : "-"}
+                                  </p>
+                                  <p>
+                                    Sex:{" "}
+                                    {item.postId.sex != ""
+                                      ? item.postId.sex
+                                      : "-"}
+                                  </p>
+                                  <p>
+                                    Colar:{" "}
+                                    {item.postId.collar ? "Have" : "Not Have"}
+                                  </p>
+                                  {/* <p>Description: {item.description != "" ? item.description.length : "-"}</p> */}
+                                  <p>
+                                    Description:{" "}
+                                    {item.postId.description != ""
+                                      ? item.postId.description.length >= 32
+                                        ? item.postId.description.substring(
+                                            0,
+                                            30
+                                          ) + "......"
+                                        : item.postId.description
+                                      : "-"}
+                                  </p>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
 
-                        <div className="place-self-center ">
-                          {/* {Object.entries(item.reason).map(([key, value]) => {
-                            let counter;
-                            counter 
-                            return (
-                              <p key={key}>
-                                {value}
-                              </p>
-                            );
-                          })} */}
-                          {/* {currentReportPost.reduce(function (accumulator, currentValue) {
-                            return accumulator + currentValue.age;
-                          }, 0)} */}
+                            <div className="place-self-center ">
+                             {sumValue(item.reason)}
 
-                          {/* {item.reduce((previousValue, currentValue) => previousValue + currentValue)} */}
-                        </div>
-                        <div
-                          className="place-self-center col-span-2 text-sm text-blue-500 cursor-pointer"
-                          onClick={() => setSelectReportPost(i)}
-                        >
-                          <p className="text-xs">ดูเพิ่มเติม</p>
-                        </div>
-                        <div className="place-self-center 2xl:relative">
-                          <ThemeProvider theme={theme}>
-                            <div className="2xl:absolute -top-8 -right-12">
-                              <IconButton aria-label="delete" size="medium">
-                                <p className="text-base text-gray-400">X</p>
-                              </IconButton>
                             </div>
-                            <div className="">
-                              <IconButton aria-label="delete" color="secondary">
-                                <DeleteIcon />
-                              </IconButton>
+                            <div
+                              className="place-self-center col-span-2 text-sm text-blue-500 cursor-pointer"
+                              onClick={() => setSelectReportPost(i)}
+                            >
+                              <p className="text-xs">ดูเพิ่มเติม</p>
                             </div>
-                          </ThemeProvider>
-                        </div>
-                      </div>
-                    ))}
+                            <div className="place-self-center 2xl:relative">
+                              <ThemeProvider theme={theme}>
+                                <div className="2xl:absolute -top-8 -right-12">
+                                  <IconButton aria-label="delete" size="medium">
+                                    <p className="text-base text-gray-400">X</p>
+                                  </IconButton>
+                                </div>
+                                <div className="">
+                                  <IconButton
+                                    aria-label="delete"
+                                    color="secondary"
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </div>
+                              </ThemeProvider>
+                            </div>
+                          </div>
+                        ))
+                      : null}
                   </section>
                   <section
                     className="block-inner-foot 2xl:w-4/5 bg-gray-50 2xl:h-36 mx-auto  rounded-b-2xl shadow-lg 2xl:flex 2xl:justify-end "
