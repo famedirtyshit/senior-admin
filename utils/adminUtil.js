@@ -29,7 +29,7 @@ const adminUtil = {
   },
   deleteReportPost: async (firebaseId,postId) => {
     try {
-      let res = await axios.post(process.env.API_KEY + `/admin/deleteRepostPost `,{fbId : firebaseId,postId : postId});
+      let res = await axios.post(process.env.API_KEY + `/admin/deleteReportPost `,{fbId : firebaseId,postId : postId});
       return res;
     } catch (e) {
       return e.response;

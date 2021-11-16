@@ -34,6 +34,8 @@ import {
 } from "firebase/auth";
 import adminUtil from "@utils/adminUtil";
 import initFirebase from "@utils/initFirebase";
+import { async } from "@firebase/util";
+import { CompassCalibrationOutlined } from "@material-ui/icons";
 
 const theme = createTheme({
   palette: {
@@ -76,7 +78,19 @@ const styleMoreInfo = {
   p: 4,
 };
 
-export default function Admin() {
+const styleConfirmDeletePostModal = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  height: 200,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+};
+
+export default function Admin(prop) {
   let counterReport;
   const [value, setValue] = useState("1");
   const [page, setPage] = useState(1);
@@ -84,8 +98,11 @@ export default function Admin() {
   const [currentReportPost, setCurrentReportPost] = useState([]);
   const [openSeeMoreModal, setOpenSeeMoreModal] = useState(false);
   const [openMoreInfoModal, setOpenMoreInfoModal] = useState(false);
+  const [openConfirmDeletePostModal, setOpenConfirmDeletePostModal] =
+    useState(false);
   const [selectReportPost, setSelectReportPost] = useState(-1);
   const [selectMoreInfoPost, setSelectMoreInfoPost] = useState(-1);
+  const [selectDeletePost, setSelectDeletePost] = useState(-1);
   const [currentUser, setCurrentUser] = useState(null);
   const [reportPost, setReportPost] = useState([]);
 
@@ -169,16 +186,16 @@ export default function Admin() {
   }, [maxPage]);
 
   useEffect(() => {
-    console.log(openSeeMoreModal);
-  }, [openSeeMoreModal]);
-
-  useEffect(() => {
     seeMore();
   }, [selectReportPost]);
 
   useEffect(() => {
     onMoreInfoModal();
   }, [selectMoreInfoPost]);
+
+  useEffect(() => {
+    onConfirmDeletePost();
+  }, [selectDeletePost]);
 
   const seeMore = () => {
     if (selectReportPost != -1) {
@@ -192,6 +209,12 @@ export default function Admin() {
     }
   };
 
+  const onConfirmDeletePost = () => {
+    if (selectDeletePost != -1) {
+      setOpenConfirmDeletePostModal(true);
+    }
+  };
+
   const handleCloseSeeMoreModal = () => {
     setOpenSeeMoreModal(false);
     setSelectReportPost(-1);
@@ -200,6 +223,36 @@ export default function Admin() {
   const handleCloseMoreInfoModal = () => {
     setOpenMoreInfoModal(false);
     setSelectMoreInfoPost(-1);
+  };
+
+  const handleCloseConfirmDeletePostModal = () => {
+    setOpenConfirmDeletePostModal(false);
+    setSelectDeletePost(-1);
+  };
+
+  const deleteReportPost = async () => {
+    console.log("prop.userObject.data.searchResult.fbId");
+    console.log(currentUser.uid);
+    console.log(currentReportPost[selectDeletePost].postId);
+    console.log(currentReportPost[selectDeletePost]);
+    if (currentReportPost[selectDeletePost] != [] && currentUser != null) {
+      let res = await adminUtil.deleteReportPost(
+        currentUser.uid,
+        currentReportPost[selectDeletePost].postId._id
+      );
+      if (res.data.result == true) {
+        let currentReportPostInner = reportPost;
+        currentReportPostInner.splice(reportPost[page - 1] * 5 + selectDeletePost, 1);
+        setReportPost([...currentReportPostInner]);
+        handleCloseConfirmDeletePostModal();
+        console.log("delete from local success");
+      } else {
+        alert("data.result = false");
+        console.log(res);
+      }
+    } else {
+      console.log("error");
+    }
   };
 
   const seeMoreModal = (
@@ -239,18 +292,52 @@ export default function Admin() {
     >
       <Box sx={styleMoreInfo}>
         <div className="overflow-y-auto h-80">
-          {/* {currentReportPost[selectReportPost]
-            ? Object.entries(currentReportPost[selectReportPost].reason).map(
-                ([key, value]) => {
+          {/* {currentReportPost[selectMoreInfoPost]
+            ? Object.entries(currentReportPost[selectMoreInfoPost].postId.urls).map(
+                ([key, item]) => {
                   return (
-                    <p key={key}>
-                      {key} {value}
-                    </p>
+                    <div key={key}>
+                      {console.log("---------------")}
+                      {console.log(value)}
+                    </div>
                   );
                 }
               )
-            : "error"}
-          <p>{reportPost.note}</p> */}
+            : "error"} */}
+        </div>
+      </Box>
+    </Modal>
+  );
+
+  const confirmDeletePostModal = (
+    <Modal
+      open={openConfirmDeletePostModal}
+      onClose={handleCloseConfirmDeletePostModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={styleConfirmDeletePostModal}>
+        <div className="">
+          <p className="text-center mt-2 text-lg ">Confirm Delete Post</p>
+          <div className="flex justify-center mt-14 space-x-4">
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                color="secondary"
+                className=""
+                onClick={deleteReportPost}
+              >
+                Delete
+              </Button>
+              <Button
+                variant="contained"
+                className="ml-12"
+                onClick={handleCloseConfirmDeletePostModal}
+              >
+                Cancel
+              </Button>
+            </ThemeProvider>
+          </div>
         </div>
       </Box>
     </Modal>
@@ -286,6 +373,7 @@ export default function Admin() {
       <main>
         {openSeeMoreModal ? seeMoreModal : null}
         {openMoreInfoModal ? moreInfoModal : null}
+        {openConfirmDeletePostModal ? confirmDeletePostModal : null}
         <section
           className="block-outer-head w-9/12 bg-white 2xl:h-36 mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
           //   style={{ height: "880px" }}
@@ -409,8 +497,7 @@ export default function Admin() {
                             </div>
 
                             <div className="place-self-center ">
-                             {sumValue(item.reason)}
-
+                              {sumValue(item.reason)}
                             </div>
                             <div
                               className="place-self-center col-span-2 text-sm text-blue-500 cursor-pointer"
@@ -430,7 +517,11 @@ export default function Admin() {
                                     aria-label="delete"
                                     color="secondary"
                                   >
-                                    <DeleteIcon />
+                                    <DeleteIcon
+                                      onClick={() => {
+                                        setSelectDeletePost(i);
+                                      }}
+                                    />
                                   </IconButton>
                                 </div>
                               </ThemeProvider>

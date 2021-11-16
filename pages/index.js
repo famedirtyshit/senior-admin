@@ -22,10 +22,12 @@ export default function Index(prop) {
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          let userObj = await adminUtil.checkAdmin(user.uid); //get user obj
+          let userObj = await adminUtil.checkAdmin(user.uid); //get user obj  
           if (userObj.data.result == true) {
             // setAuthenSuccess()
             setIsLogin(true);
+            console.log("userObj")
+            console.log(userObj)
             setCheckCurrentUser(false);
           } else {
             setCheckCurrentUser(false);
