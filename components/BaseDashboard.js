@@ -231,10 +231,6 @@ export default function Admin(prop) {
   };
 
   const deleteReportPost = async () => {
-    console.log("prop.userObject.data.searchResult.fbId");
-    console.log(currentUser.uid);
-    console.log(currentReportPost[selectDeletePost].postId);
-    console.log(currentReportPost[selectDeletePost]);
     if (currentReportPost[selectDeletePost] != [] && currentUser != null) {
       let res = await adminUtil.deleteReportPost(
         currentUser.uid,
@@ -242,9 +238,18 @@ export default function Admin(prop) {
       );
       if (res.data.result == true) {
         let currentReportPostInner = reportPost;
-        currentReportPostInner.splice(reportPost[page - 1] * 5 + selectDeletePost, 1);
+        currentReportPostInner.splice(
+          (page - 1) * 5 + selectDeletePost,
+          1
+        );
+        console.log("reportPost[page - 1]")
+        console.log(reportPost[page - 1]* 5)
         setReportPost([...currentReportPostInner]);
         handleCloseConfirmDeletePostModal();
+        
+        console.log("currentReportPostInner")
+        console.log(currentReportPostInner)
+
         console.log("delete from local success");
       } else {
         alert("data.result = false");
@@ -253,6 +258,10 @@ export default function Admin(prop) {
     } else {
       console.log("error");
     }
+    console.log("reportPost")
+    console.log(reportPost)
+    
+
   };
 
   const seeMoreModal = (
@@ -325,7 +334,7 @@ export default function Admin(prop) {
                 variant="contained"
                 color="secondary"
                 className=""
-                onClick={deleteReportPost}
+                onClick={()=>deleteReportPost()}
               >
                 Delete
               </Button>
@@ -395,7 +404,7 @@ export default function Admin(prop) {
                     aria-label="lab API tabs example"
                   >
                     <Tab label="Report post" value="1" />
-                    <Tab label="Active" value="2" />
+                    {/* <Tab label="Active" value="2" /> */}
                   </TabList>
                 </Box>
               </TabContext>
@@ -483,7 +492,7 @@ export default function Admin(prop) {
                                   {/* <p>Description: {item.description != "" ? item.description.length : "-"}</p> */}
                                   <p>
                                     Description:{" "}
-                                    {item.postId.description != ""
+                                    {item.postId.description != null
                                       ? item.postId.description.length >= 32
                                         ? item.postId.description.substring(
                                             0,
@@ -491,6 +500,7 @@ export default function Admin(prop) {
                                           ) + "......"
                                         : item.postId.description
                                       : "-"}
+                                      {/* {item.postId.description} */}
                                   </p>
                                 </div>
                               </div>
