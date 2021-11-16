@@ -98,11 +98,14 @@ export default function Admin(prop) {
   const [currentReportPost, setCurrentReportPost] = useState([]);
   const [openSeeMoreModal, setOpenSeeMoreModal] = useState(false);
   const [openMoreInfoModal, setOpenMoreInfoModal] = useState(false);
+  const [openConfirmRejectPostModal, setOpenConfirmRejectPostModal] =
+    useState(false);
   const [openConfirmDeletePostModal, setOpenConfirmDeletePostModal] =
     useState(false);
   const [selectReportPost, setSelectReportPost] = useState(-1);
   const [selectMoreInfoPost, setSelectMoreInfoPost] = useState(-1);
   const [selectDeletePost, setSelectDeletePost] = useState(-1);
+  const [selectRejectPost, setSelectRejectPost] = useState(-1);
   const [currentUser, setCurrentUser] = useState(null);
   const [reportPost, setReportPost] = useState([]);
 
@@ -157,7 +160,6 @@ export default function Admin(prop) {
           let reportPostObj = await adminUtil.getReportPost(user.uid);
           if (reportPostObj.data.result == true) {
             setReportPost(reportPostObj.data.searchResult);
-            // console.log(reportPostObj.data.searchResult);
           } else {
             console.log("error handle");
           }
@@ -197,6 +199,10 @@ export default function Admin(prop) {
     onConfirmDeletePost();
   }, [selectDeletePost]);
 
+  useEffect(() => {
+    onConfirmRejectPost();
+  }, [selectRejectPost]);
+
   const seeMore = () => {
     if (selectReportPost != -1) {
       setOpenSeeMoreModal(true);
@@ -215,6 +221,12 @@ export default function Admin(prop) {
     }
   };
 
+  const onConfirmRejectPost = () => {
+    if (selectRejectPost != -1) {
+      setOpenConfirmRejectPostModal(true);
+    }
+  };
+
   const handleCloseSeeMoreModal = () => {
     setOpenSeeMoreModal(false);
     setSelectReportPost(-1);
@@ -230,6 +242,11 @@ export default function Admin(prop) {
     setSelectDeletePost(-1);
   };
 
+  const handleCloseConfirmRejectPostModal = () => {
+    setOpenConfirmRejectPostModal(false);
+    setSelectRejectPost(-1);
+  };
+
   const deleteReportPost = async () => {
     if (currentReportPost[selectDeletePost] != [] && currentUser != null) {
       let res = await adminUtil.deleteReportPost(
@@ -238,13 +255,9 @@ export default function Admin(prop) {
       );
       if (res.data.result == true) {
         let currentReportPostInner = reportPost;
-        currentReportPostInner.splice(
-          (page - 1) * 5 + selectDeletePost,
-          1
-        );
+        currentReportPostInner.splice((page - 1) * 5 + selectDeletePost, 1);
         setReportPost([...currentReportPostInner]);
         handleCloseConfirmDeletePostModal();
-     
       } else {
         alert("can not delete post, Please retry again");
         console.log(res);
@@ -252,10 +265,29 @@ export default function Admin(prop) {
     } else {
       console.log("error");
     }
-    console.log("reportPost")
-    console.log(reportPost)
-    
+    console.log("reportPost");
+    console.log(reportPost);
+  };
 
+  const rejectReportPost = async () => {
+    if (currentReportPost[selectRejectPost] != [] && currentUser != null) {
+      let res = await adminUtil.rejectReportPost(
+        currentUser.uid,
+        currentReportPost[selectRejectPost].postId._id
+      );
+      if (res.data.result == true) {
+        let reportPostInner = reportPost;
+        reportPostInner.splice((page - 1) * 5 + selectRejectPost, 1);
+        setReportPost([...reportPostInner]);
+        handleCloseConfirmRejectPostModal();
+      } else {
+        alert("can not Reject post, Please retry again");
+        console.log(res);
+      }
+    } else {
+      console.log("error");
+    }
+   
   };
 
   const seeMoreModal = (
@@ -328,7 +360,7 @@ export default function Admin(prop) {
                 variant="contained"
                 color="secondary"
                 className=""
-                onClick={()=>deleteReportPost()}
+                onClick={() => deleteReportPost()}
               >
                 Delete
               </Button>
@@ -336,6 +368,40 @@ export default function Admin(prop) {
                 variant="contained"
                 className="ml-12"
                 onClick={handleCloseConfirmDeletePostModal}
+              >
+                Cancel
+              </Button>
+            </ThemeProvider>
+          </div>
+        </div>
+      </Box>
+    </Modal>
+  );
+
+  const confirmRejectPostModal = (
+    <Modal
+      open={openConfirmRejectPostModal}
+      onClose={handleCloseConfirmRejectPostModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={styleConfirmDeletePostModal}>
+        <div className="">
+          <p className="text-center mt-2 text-lg ">Confirm Delete Post</p>
+          <div className="flex justify-center mt-14 space-x-4">
+            <ThemeProvider theme={theme}>
+              <Button
+                variant="contained"
+                color="secondary"
+                className=""
+                onClick={()=>rejectReportPost()}
+              >
+                Reject
+              </Button>
+              <Button
+                variant="contained"
+                className="ml-12"
+                onClick={handleCloseConfirmRejectPostModal}
               >
                 Cancel
               </Button>
@@ -377,6 +443,7 @@ export default function Admin(prop) {
         {openSeeMoreModal ? seeMoreModal : null}
         {openMoreInfoModal ? moreInfoModal : null}
         {openConfirmDeletePostModal ? confirmDeletePostModal : null}
+        {openConfirmRejectPostModal ? confirmRejectPostModal : null}
         <section
           className="block-outer-head w-9/12 bg-white 2xl:h-36 mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
           //   style={{ height: "880px" }}
@@ -494,7 +561,7 @@ export default function Admin(prop) {
                                           ) + "......"
                                         : item.postId.description
                                       : "-"}
-                                      {/* {item.postId.description} */}
+                                    {/* {item.postId.description} */}
                                   </p>
                                 </div>
                               </div>
@@ -512,7 +579,11 @@ export default function Admin(prop) {
                             <div className="place-self-center 2xl:relative">
                               <ThemeProvider theme={theme}>
                                 <div className="2xl:absolute -top-8 -right-12">
-                                  <IconButton aria-label="delete" size="medium">
+                                  <IconButton
+                                    aria-label="delete"
+                                    size="medium"
+                                    onClick={() => setSelectRejectPost(i)}
+                                  >
                                     <p className="text-base text-gray-400">X</p>
                                   </IconButton>
                                 </div>
