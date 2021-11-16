@@ -38,7 +38,8 @@ module.exports = {
           mainBgGreen: '#378566',
           mainYellow:'#F4C444',
           historyBlue:'#416C94',
-          historyGrayBg:'#FAFAFA'
+          historyGrayBg:'#FAFAFA',
+          mainBlue:'#2589EF',
         },
         textColor: {
           mainGreen: '#356053'
