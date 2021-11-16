@@ -242,17 +242,11 @@ export default function Admin(prop) {
           (page - 1) * 5 + selectDeletePost,
           1
         );
-        console.log("reportPost[page - 1]")
-        console.log(reportPost[page - 1]* 5)
         setReportPost([...currentReportPostInner]);
         handleCloseConfirmDeletePostModal();
-        
-        console.log("currentReportPostInner")
-        console.log(currentReportPostInner)
-
-        console.log("delete from local success");
+     
       } else {
-        alert("data.result = false");
+        alert("can not delete post, Please retry again");
         console.log(res);
       }
     } else {
