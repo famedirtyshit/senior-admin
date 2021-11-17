@@ -394,7 +394,7 @@ export default function Admin(prop) {
     >
       <Box sx={styleConfirmDeletePostModal}>
         <div className="">
-          <p className="text-center mt-2 text-lg ">Confirm Delete Post</p>
+          <p className="text-center mt-2 text-lg ">Confirm Reject Post</p>
           <div className="flex justify-center mt-14 space-x-4">
             <ThemeProvider theme={theme}>
               <Button
