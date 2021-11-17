@@ -67,9 +67,11 @@ const styleSeeMore = {
 };
 
 const styleMoreInfo = {
-  position: "absolute",
+  position: "relative",
   top: "50%",
   left: "50%",
+  overflow:'scroll',
+  height:'100%',
   transform: "translate(-50%, -50%)",
   width: 1366,
   height: 597,
@@ -212,6 +214,8 @@ export default function Admin(prop) {
   const onMoreInfoModal = () => {
     if (selectMoreInfoPost != -1) {
       setOpenMoreInfoModal(true);
+    } else {
+      console.log("selectMoreInfoPost == -1");
     }
   };
 
@@ -287,7 +291,6 @@ export default function Admin(prop) {
     } else {
       console.log("error");
     }
-   
   };
 
   const seeMoreModal = (
@@ -326,19 +329,23 @@ export default function Admin(prop) {
       aria-describedby="modal-modal-description"
     >
       <Box sx={styleMoreInfo}>
-        <div className="overflow-y-auto h-80">
-          {/* {currentReportPost[selectMoreInfoPost]
+        <div className=" grid grid-cols-3  ">
+          {currentReportPost[selectMoreInfoPost]
             ? Object.entries(currentReportPost[selectMoreInfoPost].postId.urls).map(
                 ([key, item]) => {
                   return (
-                    <div key={key}>
-                      {console.log("---------------")}
-                      {console.log(value)}
+                    <div key={key} className="mb-6">   
+                      <Image
+                        src={item.url}
+                        alt={"sasa"+key}
+                        width="350"
+                        height="407"             
+                      />  
                     </div>
                   );
                 }
               )
-            : "error"} */}
+            : "error"} 
         </div>
       </Box>
     </Modal>
@@ -394,7 +401,7 @@ export default function Admin(prop) {
                 variant="contained"
                 color="secondary"
                 className=""
-                onClick={()=>rejectReportPost()}
+                onClick={() => rejectReportPost()}
               >
                 Reject
               </Button>
@@ -511,16 +518,14 @@ export default function Admin(prop) {
                             className="item-style bg-white 2xl:grid 2xl:grid-cols-7 2xl:justify-items-stretch 2xl:gap-2 "
                           >
                             <div className="grid grid-flow-col grid-cols-3 col-span-3 ">
-                              <div
-                                className="justify-self-center cursor-pointer "
-                                onClick={() => setSelectMoreInfoPost(i)}
-                              >
+                              <div className="justify-self-center cursor-pointer ">
                                 {item.postId.urls.length > 0 ? (
                                   <Image
                                     src={item.postId.urls[0].url}
                                     alt={item.postId.urls[0].fileName}
                                     width="110"
                                     height="107"
+                                    onClick={() => setSelectMoreInfoPost(i)}
                                   />
                                 ) : (
                                   <Image
