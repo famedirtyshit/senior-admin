@@ -36,6 +36,8 @@ import adminUtil from "@utils/adminUtil";
 import initFirebase from "@utils/initFirebase";
 import { async } from "@firebase/util";
 import { CompassCalibrationOutlined } from "@material-ui/icons";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const theme = createTheme({
   palette: {
@@ -70,8 +72,8 @@ const styleMoreInfo = {
   position: "relative",
   top: "50%",
   left: "50%",
-  overflow:'scroll',
-  height:'100%',
+  overflow: "scroll",
+  height: "100%",
   transform: "translate(-50%, -50%)",
   width: 1366,
   height: 597,
@@ -110,6 +112,7 @@ export default function Admin(prop) {
   const [selectRejectPost, setSelectRejectPost] = useState(-1);
   const [currentUser, setCurrentUser] = useState(null);
   const [reportPost, setReportPost] = useState([]);
+  const [accountMenu, setAccountMenu] = useState(null);
 
   const handleChangePage = (event, value) => {
     setPage(value);
@@ -117,6 +120,14 @@ export default function Admin(prop) {
   };
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleCloseAccountMenu = () => {
+    setAccountMenu(null);
+  };
+
+  const handleOpenAccountMenu = (event) => {
+    setAccountMenu(event.currentTarget);
   };
 
   const renderPageItems = () => {
@@ -141,14 +152,6 @@ export default function Admin(prop) {
     renderPageItems();
   }, [reportPost, page]);
 
-  //   useEffect(async () => {
-  //     try {
-  //        await renderPageItems();
-  //         await sumValue();
-  //     } catch (e) {
-  //         console.error(e);
-  //     }
-  // }, [reportPost, page]);
 
   useEffect(() => {
     let res = initFirebase();
@@ -158,10 +161,11 @@ export default function Admin(prop) {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
           setCurrentUser(user);
+          console.log("user");
           console.log(user);
           let reportPostObj = await adminUtil.getReportPost(user.uid);
           if (reportPostObj.data.result == true) {
-            setReportPost(reportPostObj.data.searchResult);
+            setReportPost(reportPostObj.data.searchResult); 
           } else {
             console.log("error handle");
           }
@@ -172,6 +176,15 @@ export default function Admin(prop) {
     } else {
     }
   }, []);
+
+//   const logout = () => {
+//     const auth = getAuth();
+//     signOut(auth).then(() => {
+//         setCurrentUser(null);
+//     }).catch((error) => {
+//         alert('fail please retry later');
+//     });
+// };
 
   useEffect(() => {
     setMaxPage(Math.ceil(reportPost.length / 5));
@@ -205,6 +218,7 @@ export default function Admin(prop) {
     onConfirmRejectPost();
   }, [selectRejectPost]);
 
+  
   const seeMore = () => {
     if (selectReportPost != -1) {
       setOpenSeeMoreModal(true);
@@ -331,21 +345,21 @@ export default function Admin(prop) {
       <Box sx={styleMoreInfo}>
         <div className=" grid grid-cols-3  ">
           {currentReportPost[selectMoreInfoPost]
-            ? Object.entries(currentReportPost[selectMoreInfoPost].postId.urls).map(
-                ([key, item]) => {
-                  return (
-                    <div key={key} className="mb-6">   
-                      <Image
-                        src={item.url}
-                        alt={"sasa"+key}
-                        width="350"
-                        height="407"             
-                      />  
-                    </div>
-                  );
-                }
-              )
-            : "error"} 
+            ? Object.entries(
+                currentReportPost[selectMoreInfoPost].postId.urls
+              ).map(([key, item]) => {
+                return (
+                  <div key={key} className="mb-6">
+                    <Image
+                      src={item.url}
+                      alt={"sasa" + key}
+                      width="350"
+                      height="407"
+                    />
+                  </div>
+                );
+              })
+            : "error"}
         </div>
       </Box>
     </Modal>
@@ -445,6 +459,32 @@ export default function Admin(prop) {
             </h1>
           </a>
         </Link>
+        <div className="flex flex-warp pt-3 ml-3" onClick={handleOpenAccountMenu}>
+          <p className="text-white text-base">{currentUser == null ? "not a user" : currentUser.email}</p>
+          <div className="mt-2 ml-3">
+            <svg
+              width="12"
+              height="6"
+              viewBox="0 0 18 9"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.62878 7.74068C7.53883 7.67259 7.46291 7.59722 7.39688 7.51892L0.504162 2.26459C-0.167948 1.75178 -0.168267 0.920687 0.504481 0.407648C1.17691 -0.105147 2.26753 -0.105132 2.9406 0.407681L8.87667 4.93303L14.844 0.384986C15.5161 -0.128052 16.6071 -0.128037 17.2801 0.385019C17.616 0.641547 17.7841 0.97734 17.7841 1.31313C17.7841 1.64892 17.616 1.98544 17.2795 2.24123L10.3565 7.51896C10.2904 7.59725 10.2148 7.67239 10.1246 7.74071C9.78005 8.00331 9.32772 8.12925 8.87667 8.12341C8.4253 8.12948 7.97233 8.00328 7.62878 7.74068Z"
+                fill="white"
+              />
+            </svg>
+          </div>
+        </div>
+        <Menu
+          id="account-menu"
+          anchorEl={accountMenu}
+          keepMounted
+          open={Boolean(accountMenu)}
+          onClose={handleCloseAccountMenu}
+        >
+          <MenuItem onClick={prop.logout}>Logout</MenuItem>
+        </Menu>
       </header>
       <main>
         {openSeeMoreModal ? seeMoreModal : null}

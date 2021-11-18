@@ -41,12 +41,24 @@ export default function Index(prop) {
       console.log("init firebase error");
     }
   }, []);
+
+  const logout = () => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+        setIsLogin(false);
+    }).catch((error) => {
+        alert('fail please retry later');
+    });
+};
+
   return (
-    <div className="relative text-center mt-12">
+    <div className="relative text-center ">
       {checkCurrentUser ? (
+        <div className="mt-12">
         <CircularProgress />
+        </div>
       ) : isLogin ? (
-        <BaseDashboard />
+        <BaseDashboard logout={logout} setIsLogin={setIsLogin}/>
       ) : (
         <BaseAuthen setIsLogin={setIsLogin} />
       )}
