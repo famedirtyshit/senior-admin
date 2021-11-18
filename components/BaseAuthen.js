@@ -135,110 +135,6 @@ export default function Authen(prop) {
     return { status: true, msg: "pass", type: "pass" };
   };
 
-  const validateCredentialSignUp = (email, password, confirmPassword) => {
-    if (!email) {
-      return { status: false, msg: "please input your email", type: "email" };
-    }
-    let checker = /\S+@\S+\.\S+/;
-    if (checker.test(email) == false) {
-      return { status: false, msg: "email format wrong", type: "email" };
-    }
-    if (!password) {
-      return {
-        status: false,
-        msg: "please input your password",
-        type: "password",
-      };
-    }
-    if (!confirmPassword) {
-      return {
-        status: false,
-        msg: "please input your confirm password",
-        type: "confirmPassword",
-      };
-    }
-    if (password != confirmPassword) {
-      return {
-        status: false,
-        msg: "your password and confirm password is not match",
-        type: "confirmPassword",
-      };
-    }
-    // let passwordChecker = /^(?=.\d)(?=.[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/
-    let passwordSchema = new passwordValidator();
-    passwordSchema.is().min(6);
-    if (passwordSchema.validate(password) == false) {
-      return {
-        status: false,
-        msg: "password must between 6 to 20 characters which contain at least one numeric digit, uppercase, lowercase and not have spaces",
-        type: "password",
-      };
-    }
-    return { status: true, msg: "pass", type: "pass" };
-  };
-
-  const validateContactSignUp = (
-    firstName,
-    lastName,
-    phone,
-    facebook,
-    instagram
-  ) => {
-    if (!firstName) {
-      return {
-        status: false,
-        msg: "please input your firstname",
-        type: "firstname",
-      };
-    }
-    if (firstName.length > 50) {
-      return {
-        status: false,
-        msg: "firstname length must not exceed 50 characters",
-        type: "firstname",
-      };
-    }
-    if (!lastName) {
-      return {
-        status: false,
-        msg: "please input your lastname",
-        type: "lastname",
-      };
-    }
-    if (lastName.length > 50) {
-      return {
-        status: false,
-        msg: "lastname length must not exceed 50 characters",
-        type: "lastname",
-      };
-    }
-    if (!phone) {
-      return {
-        status: false,
-        msg: "please input your phone number",
-        type: "phone",
-      };
-    }
-    let phoneFormat = /^\d+$/;
-    if (!phoneFormat.test(phone) || phone.length !== 10) {
-      return { status: false, msg: "phone format is wrong", type: "phone" };
-    }
-    if (facebook.length > 100) {
-      return {
-        status: false,
-        msg: "facebook length must not exceed 100 characters",
-        type: "facebook",
-      };
-    }
-    if (instagram.length > 50) {
-      return {
-        status: false,
-        msg: "instagram length must not exceed 50 characters",
-        type: "instagram",
-      };
-    }
-    return { status: true, msg: "pass", type: "pass" };
-  };
 
   const logOut = () => {
     const auth = getAuth();
@@ -252,26 +148,7 @@ export default function Authen(prop) {
       });
   };
 
-  const signup = async (
-    email,
-    password,
-    firstname,
-    lastname,
-    phone,
-    facebook,
-    instagram
-  ) => {
-    let res = await accountUtil.signup(
-      email,
-      password,
-      firstname,
-      lastname,
-      phone,
-      facebook,
-      instagram
-    );
-    return res;
-  };
+
 
   return (
     <div style={{ fontFamily: "Prompt" }} className={"2xl:container mx-auto"}>
@@ -283,35 +160,19 @@ export default function Authen(prop) {
       <header className="2xl:py-8">
         <Link href="/">
           <a>
-            <h1 className="text-mainOrange 2xl:text-7xl font-bold 2xl:ml-64 inline-block">
+            <h1 className="text-mainBlue 2xl:text-7xl font-bold  inline-block">
               Catus
             </h1>
           </a>
         </Link>
       </header>
-      <main className="bg-mainYellow mb-36 py-16 px-80">
-        <section className={sectionClasses.style}>
-          {authenType == "signin" ? (
+      <main className="bg-mainBlue mb-36 py-16 px-80">
+        <section className={sectionClasses.style}>     
             <BaseSignIn
               validType={validType}
               goSignUp={goSignUp}
               signIn={signIn}
-            />
-          ) : (
-            <BaseSignUp
-              setLoadingStatus={setLoadingStatus}
-              setResAlertType={setResAlertType}
-              setAuthenType={setAuthenType}
-              signup={signup}
-              validateContactSignUp={validateContactSignUp}
-              validateCredentialSignUp={validateCredentialSignUp}
-              setValidStatus={setValidStatus}
-              setValidMsg={setValidMsg}
-              setValidType={setValidType}
-              validType={validType}
-              goSignIn={goSignIn}
-            />
-          )}
+            />  
           <BaseAuthenResModal
             loadingStatus={loadingStatus}
             resAlertType={resAlertType}
