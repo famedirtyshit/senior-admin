@@ -441,6 +441,17 @@ export default function Admin(prop) {
     return <p>{reportCount}</p>;
   };
 
+  const convertDateFormat = (dateData) => {
+    let dateConvert = new Date(dateData);
+    let year;
+    let month;
+    let date;
+    year = dateConvert.getFullYear();
+    month = dateConvert.getMonth() + 1;
+    date = dateConvert.getDate();
+    return `${date}/${month}/${year}`;
+}
+
   return (
     <div
       style={{ fontFamily: "Prompt" }}
@@ -576,33 +587,33 @@ export default function Admin(prop) {
                                   />
                                 )}
                               </div>
-                              <div className="content-center  mx-3 grid col-span-3 text-sm ">
+                              <div className="justtify-self-start content-center  mx-3 grid col-span-3 text-sm ">
                                 {/* {item.description.length < "93" ? item.description:"null"} */}
-                                <div className="text-sm">
-                                  <p>
+                                <div className=" text-sm">
+                                  <p className="text-left">
                                     Date:{" "}
                                     {item.postId.date != ""
-                                      ? item.postId.date
+                                      ? convertDateFormat(item.postId.date)
                                       : "-"}
                                   </p>
-                                  <p>
+                                  <p className="text-left">
                                     Sex:{" "}
                                     {item.postId.sex != ""
                                       ? item.postId.sex
                                       : "-"}
                                   </p>
-                                  <p>
+                                  <p className="text-left">
                                     Colar:{" "}
                                     {item.postId.collar ? "Have" : "Not Have"}
                                   </p>
                                   {/* <p>Description: {item.description != "" ? item.description.length : "-"}</p> */}
-                                  <p>
+                                  <p className="text-left">
                                     Description:{" "}
                                     {item.postId.description != null
                                       ? item.postId.description.length >= 32
                                         ? item.postId.description.substring(
                                             0,
-                                            30
+                                            24
                                           ) + "......"
                                         : item.postId.description
                                       : "-"}
