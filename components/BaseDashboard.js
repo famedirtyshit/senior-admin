@@ -576,7 +576,7 @@ export default function Admin(prop) {
                                   />
                                 )}
                               </div>
-                              <div className="content-center   mx-3 grid col-span-3 text-sm ">
+                              <div className="content-center  mx-3 grid col-span-3 text-sm ">
                                 {/* {item.description.length < "93" ? item.description:"null"} */}
                                 <div className="text-sm">
                                   <p>
@@ -681,7 +681,7 @@ export default function Admin(prop) {
             <div className="2xl:text-white">
               <p className="2xl:text-2xl">ติดต่อเรา</p>
               <p className="2xl:mt-1">+66 6071 2203</p>
-              <p>catus_helpyou@sit.kmutt.ac.th</p>
+              <p>catusservice@gmail.com</p>
               <p className="2xl:text-5xl 2xl:mt-2 2xl:font-black">Catus</p>
               <p className="2xl:text-gray-300">© Copyright 2021 CatUs</p>
             </div>
