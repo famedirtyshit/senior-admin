@@ -75,7 +75,7 @@ const styleMoreInfo = {
   overflow: "scroll",
   height: "100%",
   transform: "translate(-50%, -50%)",
-  width: 1366,
+  width: '80%',
   height: 597,
   bgcolor: "background.paper",
   boxShadow: 24,
@@ -461,11 +461,11 @@ export default function Admin(prop) {
         <meta name="description" content="CatUs Service" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <header className="2xl:flex 2xl:flex-wrap 2xl:justify-between 2xl:mx-64 pt-3">
+      <header className="flex flex-wrap justify-between mx-64 pt-3">
         <Link href="/">
           <a>
-            <h1 className="2xl:text-5xl 2xl:font-black 2xl:text-white 2xl:ml-16 2xl:mt-2">
-              Catus<span className="2xl:text-base"> admin</span>
+            <h1 className="text-5xl font-black text-white lg:ml-16 sm:ml-1 mt-2">
+              Catus<span className="text-base"> admin</span>
             </h1>
           </a>
         </Link>
@@ -507,11 +507,11 @@ export default function Admin(prop) {
         {openConfirmDeletePostModal ? confirmDeletePostModal : null}
         {openConfirmRejectPostModal ? confirmRejectPostModal : null}
         <section
-          className="block-outer-head w-9/12 bg-white 2xl:h-36 mx-auto  rounded-t-2xl shadow-lg 2xl:mt-20"
+          className="block-outer-head w-9/12 bg-white h-36 mx-auto  rounded-t-2xl shadow-lg mt-20"
           //   style={{ height: "880px" }}
         >
-          <div className="2xl:absolute 2xl:ml-7 2xl:mt-12">
-            <p className="dashboard-style 2xl:text-3xl 2xl:font-bold ">
+          <div className="absolute ml-7 mt-12">
+            <p className="dashboard-style text-3xl font-bold ">
               Dashboard
             </p>
           </div>
@@ -535,7 +535,7 @@ export default function Admin(prop) {
           </div>
         </section>
         <section
-          className="2xl:w-9/12 mx-auto bg-gray-100 rounded-b-2xl shadow-lg 2xl:grid"
+          className="w-9/12 mx-auto bg-gray-100 rounded-b-2xl shadow-lg grid"
           style={{ height: "1000px" }}
         >
           <Box sx={{ width: "100%", typography: "body1" }}>
@@ -543,36 +543,36 @@ export default function Admin(prop) {
               <TabPanel value="1">
                 <section>
                   <section
-                    className="block-inner-head 2xl:w-4/5 bg-gray-50 2xl:h-36 mx-auto rounded-t-2xl shadow-lg 2xl:mt-16"
+                    className="block-inner-head w-4/5 bg-gray-50 h-36 mx-auto rounded-t-2xl shadow-lg mt-16"
                     style={{ height: "95px" }}
                   >
-                    <div className="header-style 2xl:grid 2xl:grid-cols-7 2xl:justify-items-stretch 2xl:gap-2 ">
-                      <div className="post-style 2xl:col-span-3 2xl:m-7 2xl:mt-12">
+                    <div className="header-style grid grid-cols-7 justify-items-stretch gap-2 ">
+                      <div className="post-style col-span-3 m-7 mt-12">
                         Post
                       </div>
 
-                      <div className="deleted-on-style 2xl:justify-self-center 2xl:m-7 2xl:mt-12 text-sm">
+                      <div className="deleted-on-style justify-self-center m-7 mt-12 text-sm">
                         Report Count
                       </div>
-                      <div className="note-style 2xl:col-span-2 2xl:justify-self-center 2xl:m-7 2xl:mt-12">
+                      <div className="note-style col-span-2 justify-self-center m-7 mt-12">
                         Note
                       </div>
-                      <div className="action-style 2xl:justify-self-center 2xl:m-7 2xl:mt-12">
+                      <div className="action-style justify-self-center m-7 mt-12">
                         Action
                       </div>
                     </div>
                   </section>
                   <section
-                    className="block-inner-body 2xl:w-4/5 mx-auto bg-gray-100  shadow-lg 2xl:grid 2xl:grid-rows-5 2xl:gap-0.5"
-                    style={{ height: "540px" }}
+                    className="block-inner-body w-4/5 mx-auto bg-gray-100  shadow-lg grid grid-rows-5 gap-0.5"
+                    style={{ height: "600px" }}
                   >
                     {currentReportPost != null
                       ? currentReportPost.map((item, i) => (
                           <div
                             key={i}
-                            className="item-style bg-white 2xl:grid 2xl:grid-cols-7 2xl:justify-items-stretch 2xl:gap-2 "
+                            className="item-style bg-white grid grid-cols-7 justify-items-stretch gap-2"
                           >
-                            <div className="grid grid-flow-col grid-cols-3 col-span-3 ">
+                            <div className="grid grid-flow-col grid-cols-3 col-span-3">
                               <div className="justify-self-center cursor-pointer ">
                                 {item.postId.urls.length > 0 ? (
                                   <Image
@@ -638,15 +638,15 @@ export default function Admin(prop) {
                             >
                               <p className="text-xs">ดูเพิ่มเติม</p>
                             </div>
-                            <div className="place-self-center 2xl:relative">
+                            <div className="place-self-center relative">
                               <ThemeProvider theme={theme}>
-                                <div className="2xl:absolute -top-8 -right-12">
+                                <div className="absolute -top-8 -right-12">
                                   <IconButton
                                     aria-label="delete"
                                     size="medium"
                                     onClick={() => setSelectRejectPost(i)}
                                   >
-                                    <p className="text-base text-gray-400">X</p>
+                                    <p className="absolute text-base text-gray-400 2xl:mt-1 2xl:mr-1 xl:mt-1 xl:mr-5 lg:mt-1 lg:mr-12 md:mt-1 md:mr-20 sm:mt-1 sm:mr-24">X</p>
                                   </IconButton>
                                 </div>
                                 <div className="">
@@ -668,13 +668,13 @@ export default function Admin(prop) {
                       : null}
                   </section>
                   <section
-                    className="block-inner-foot 2xl:w-4/5 bg-gray-50 2xl:h-36 mx-auto  rounded-b-2xl shadow-lg 2xl:flex 2xl:justify-end "
+                    className="block-inner-foot w-4/5 bg-gray-50 h-36 mx-auto  rounded-b-2xl shadow-lg flex justify-end "
                     style={{ height: "95px" }}
                   >
                     <div>
                       <Stack spacing={2}>
                         <Pagination
-                          className="page-number 2xl:mt-10 justify-center"
+                          className="page-number mt-10 justify-center"
                           count={maxPage}
                           page={page}
                           onChange={handleChangePage}
@@ -691,29 +691,29 @@ export default function Admin(prop) {
       </main>
       <footer>
         <section
-          className="footer-orange 2xl:flex 2xl:flex-col 2xl:justify-center 2xl:items-center 2xl:bg-mainBlue 2xl:mt-36"
+          className="footer-orange flex flex-col justify-center items-center bg-mainBlue mt-36"
           style={{ width: "100%", height: "259px" }}
         >
-          <div className="2xl:flex 2xl:flex-wrap 2xl:gap-52">
-            <div className="2xl:text-white">
-              <p className="2xl:text-2xl">ติดต่อเรา</p>
-              <p className="2xl:mt-1">+66 6071 2203</p>
-              <p>catusservice@gmail.com</p>
-              <p className="2xl:text-5xl 2xl:mt-2 2xl:font-black">Catus</p>
-              <p className="2xl:text-gray-300">© Copyright 2021 CatUs</p>
-            </div>
-            <div className="2xl:text-white">
-              <p className="2xl:text-2xl">สถานที่ทำการ</p>
-              <p className="2xl:mt-1 2xl:-mb-1">
-                Space Dragon 168 ซอยประชาอุทิศ 40 ถนนประชาอุทิศ แขวงบางมด
-                เขตทุ่งครุ กรุงเทพมหานคร 10140
-              </p>
-              <p className="2xl:mt-20 2xl:text-gray-300">
-                School of Information Technology, King Mongkut&apos;s University
-                of Technology Thonburi
-              </p>
-            </div>
-          </div>
+          <div className="flex flex-wrap lg:gap-52 sm:gap-5 mt-10 ml-5">
+        <div className="text-white">
+          <p className="lg:text-2xl text-xl">ติดต่อเรา</p>
+          <p className="mt-1">+66 6071 2203</p>
+          <p>catusservice@gmail.com</p>
+          <p className="lg:text-5xl text-4xl mt-2 font-black">Catus</p>
+          <p className="text-gray-300 mb-10">© Copyright 2021 CatUs</p>
+        </div>
+        <div className="text-white">
+          <p className="lg:text-2xl text-xl">สถานที่ทำการ</p>
+          <p className="mt-1 -mb-1">
+            Space Dragon 168 ซอยประชาอุทิศ 40 ถนนประชาอุทิศ แขวงบางมด
+            เขตทุ่งครุ กรุงเทพมหานคร 10140
+          </p>
+          <p className="mt-5 lg:mt-20 text-gray-300 mb-10 md:mt-16">
+            School of Information Technology, King Mongkut&apos;s University
+            of Technology Thonburi
+          </p>
+        </div>
+      </div>
         </section>
       </footer>
     </div>
