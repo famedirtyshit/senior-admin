@@ -152,7 +152,6 @@ export default function Admin(prop) {
     renderPageItems();
   }, [reportPost, page]);
 
-
   useEffect(() => {
     let res = initFirebase();
     if (res != false) {
@@ -165,7 +164,7 @@ export default function Admin(prop) {
           console.log(user);
           let reportPostObj = await adminUtil.getReportPost(user.uid);
           if (reportPostObj.data.result == true) {
-            setReportPost(reportPostObj.data.searchResult); 
+            setReportPost(reportPostObj.data.searchResult);
           } else {
             console.log("error handle");
           }
@@ -177,14 +176,14 @@ export default function Admin(prop) {
     }
   }, []);
 
-//   const logout = () => {
-//     const auth = getAuth();
-//     signOut(auth).then(() => {
-//         setCurrentUser(null);
-//     }).catch((error) => {
-//         alert('fail please retry later');
-//     });
-// };
+  //   const logout = () => {
+  //     const auth = getAuth();
+  //     signOut(auth).then(() => {
+  //         setCurrentUser(null);
+  //     }).catch((error) => {
+  //         alert('fail please retry later');
+  //     });
+  // };
 
   useEffect(() => {
     setMaxPage(Math.ceil(reportPost.length / 5));
@@ -218,7 +217,6 @@ export default function Admin(prop) {
     onConfirmRejectPost();
   }, [selectRejectPost]);
 
-  
   const seeMore = () => {
     if (selectReportPost != -1) {
       setOpenSeeMoreModal(true);
@@ -355,6 +353,7 @@ export default function Admin(prop) {
                       alt={"sasa" + key}
                       width="350"
                       height="407"
+                      priority={'eager'}
                     />
                   </div>
                 );
@@ -450,7 +449,7 @@ export default function Admin(prop) {
     month = dateConvert.getMonth() + 1;
     date = dateConvert.getDate();
     return `${date}/${month}/${year}`;
-}
+  };
 
   return (
     <div
@@ -470,8 +469,13 @@ export default function Admin(prop) {
             </h1>
           </a>
         </Link>
-        <div className="flex flex-warp pt-3 ml-3" onClick={handleOpenAccountMenu}>
-          <p className="text-white text-base">{currentUser == null ? "not a user" : currentUser.email}</p>
+        <div
+          className="flex flex-warp pt-3 ml-3"
+          onClick={handleOpenAccountMenu}
+        >
+          <p className="text-white text-base">
+            {currentUser == null ? "not a user" : currentUser.email}
+          </p>
           <div className="mt-2 ml-3">
             <svg
               width="12"
@@ -547,8 +551,8 @@ export default function Admin(prop) {
                         Post
                       </div>
 
-                      <div className="deleted-on-style 2xl:justify-self-center 2xl:m-7 2xl:mt-12">
-                        Count
+                      <div className="deleted-on-style 2xl:justify-self-center 2xl:m-7 2xl:mt-12 text-sm">
+                        Report Count
                       </div>
                       <div className="note-style 2xl:col-span-2 2xl:justify-self-center 2xl:m-7 2xl:mt-12">
                         Note
@@ -576,6 +580,7 @@ export default function Admin(prop) {
                                     alt={item.postId.urls[0].fileName}
                                     width="110"
                                     height="107"
+                                    priority={'eager'}
                                     onClick={() => setSelectMoreInfoPost(i)}
                                   />
                                 ) : (
@@ -584,6 +589,7 @@ export default function Admin(prop) {
                                     alt="defaultImageCat"
                                     width="110"
                                     height="107"
+                                    priority={'eager'}
                                   />
                                 )}
                               </div>
@@ -598,9 +604,9 @@ export default function Admin(prop) {
                                   </p>
                                   <p className="text-left">
                                     Sex:{" "}
-                                    {item.postId.sex != ""
-                                      ? item.postId.sex
-                                      : "-"}
+                                    {item.postId.sex == "unknown"
+                                      ? "unknown"
+                                      : item.postId.sex == "true" ? "male" : "female"}
                                   </p>
                                   <p className="text-left">
                                     Colar:{" "}
