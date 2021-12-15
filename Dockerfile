@@ -7,8 +7,16 @@ RUN npm install --frozen-lockfile
 
 # Rebuild the source code only when needed
 FROM node:12-alpine3.14 AS builder
-
-ENV API_KEY=CHANGEME
+ENV GMAPKEY=
+ENV API_KEY=
+ENV PASS_HASH=
+ENV FB_APIKEY=
+ENV FB_DOMAIN=
+ENV FB_PROJECTID=
+ENV FB_BUCKET=
+ENV FB_MESSAGINGSENDER=
+ENV FB_APPID=
+ENV FB_MEASUREMENTID=
 
 WORKDIR /app
 COPY . .
